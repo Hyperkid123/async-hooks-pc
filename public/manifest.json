@@ -1,0 +1,11 @@
+{
+    "name": "chrome",
+    "version": "1.0.0",
+    "extensions": [],
+    "registrationMethod": "custom",
+    "baseURL": "/",
+    "loadScripts": [
+        "chrome.js"
+    ],
+    "buildHash": "98cc32d5254214e8146c64f04c9d4fc6"
+}

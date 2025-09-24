@@ -1,6 +1,27 @@
 import { defineConfig } from "@rspack/cli";
-import { rspack } from "@rspack/core";
+import { rspack, container } from "@rspack/core";
 import { ReactRefreshRspackPlugin } from "@rspack/plugin-react-refresh";
+const { ModuleFederationPlugin } = container;
+
+const fed = new ModuleFederationPlugin({
+	name: 'chrome',
+	library: { type: 'global', name: 'chrome' },
+	exposes: {
+		'./useAsyncCounter': './src/modules/useAsyncCounter.ts',
+		'./useAsyncPassThrough': './src/modules/useAsyncPassThrough.ts',
+		'./Title': './src/modules/Title.tsx'
+	},
+	shared: {
+		react: {
+			singleton: true,
+			requiredVersion: '*'
+		},
+		'react-dom': {
+			singleton: true,
+			requiredVersion: '*'
+		}
+	}
+});
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -50,6 +71,7 @@ export default defineConfig({
 		new rspack.HtmlRspackPlugin({
 			template: "./index.html"
 		}),
+		fed,
 		isDev ? new ReactRefreshRspackPlugin() : null
 	].filter(Boolean),
 	optimization: {
